@@ -2,31 +2,31 @@
     <h2 class="title">Generated Form</h2>
   
     <form [formGroup]="generatedForm" (ngSubmit)="onSubmit()">
-      <mat-card *ngFor="let field of formFields" class="field-card">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>{{ field.label }}</mat-label>
+        <div *ngFor="let field of formFields" class="field-card">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ field.label }}</mat-label>
+        
+                <ng-container [ngSwitch]="field.type">
+                    <input *ngSwitchCase="'text'" matInput [formControlName]="field.id" [placeholder]="field.label"/>
+                    <input *ngSwitchCase="'number'" matInput type="number" [formControlName]="field.id" [placeholder]="field.label"/>
+                    <input *ngSwitchCase="'email'" matInput type="email" [formControlName]="field.id" [placeholder]="field.label"/>
+                    <mat-select *ngSwitchCase="'dropdown'" [formControlName]="field.id">
+                        <mat-option *ngFor="let option of field.options" [value]="option">
+                            <mat-icon>check_circle</mat-icon> {{ option }}
+                        </mat-option>
+                    </mat-select>
+                </ng-container>
+        
+                <mat-error *ngIf="generatedForm.get(field.id)?.hasError('required')">
+                  {{ field.label }} is required
+                </mat-error>
+            </mat-form-field>
+        </div>
   
-          <ng-container [ngSwitch]="field.type">
-            <input *ngSwitchCase="'text'" matInput [formControlName]="field.label" [placeholder]="field.label"/>
-            <input *ngSwitchCase="'number'" matInput type="number" [formControlName]="field.label" [placeholder]="field.label"/>
-            <input *ngSwitchCase="'email'" matInput type="email" [formControlName]="field.label" [placeholder]="field.label"/>
-            <mat-select *ngSwitchCase="'dropdown'" [formControlName]="field.label">
-              <mat-option *ngFor="let option of field.options" [value]="option">
-                {{ option }}
-              </mat-option>
-            </mat-select>
-          </ng-container>
-  
-          <mat-error *ngIf="generatedForm.get(field.label)?.hasError('required')">
-            {{ field.label }} is required
-          </mat-error>
-        </mat-form-field>
-      </mat-card>
-  
-      <div class="button-container">
-        <button mat-flat-button color="primary" type="submit" [disabled]="generatedForm.invalid">
-          Submit
-        </button>
-      </div>
+        <div class="button-container">
+            <button mat-flat-button color="primary" type="submit" [disabled]="generatedForm.invalid">
+                Submit
+            </button>
+        </div>
     </form>
 </div>  

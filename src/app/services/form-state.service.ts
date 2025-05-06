@@ -26,4 +26,8 @@ export class FormStateService {
   getFormFields(){
     return this.formFieldsSubject.getValue();
   }
+
+  removeFormFields() {
+    this.formFieldsSubject.next([]);
+  }  
 }

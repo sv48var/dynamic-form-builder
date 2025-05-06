@@ -1,98 +1,97 @@
 <div class="container">
-  <h2>Dynamic Form Builder</h2>
+  <mat-card class="form-card">
+    <h2>Dynamic Form Builder</h2>
 
-  <form [formGroup]="fieldForm">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Label</mat-label>
-      <input matInput formControlName="label" placeholder="Enter label" />
-    </mat-form-field>
+    <form [formGroup]="fieldForm">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Label</mat-label>
+        <input matInput formControlName="label" placeholder="Enter label" />
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Field Type</mat-label>
-      <mat-select formControlName="type">
-        <mat-option *ngFor="let type of fieldTypes" [value]="type">{{ type | titlecase }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Field Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option *ngFor="let type of fieldTypes" [value]="type">{{ type | titlecase }}</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <mat-checkbox formControlName="required">Required</mat-checkbox>
+      <mat-checkbox formControlName="required">Required</mat-checkbox>
 
-    <div *ngIf="isDropdown()" formArrayName="options" class="options-block">
-      <label>Dropdown Options:</label>
+      <div *ngIf="isDropdown()" formArrayName="options" class="options-block">
+        <label>Dropdown Options:</label>
 
-      <div *ngFor="let opt of options.controls; let i = index">
-        <mat-form-field class="option-input">
-          <input matInput [formControlName]="i" placeholder="Option {{ i + 1 }}" />
-        </mat-form-field>
-        <button mat-icon-button color="warn" (click)="removeDropdownOption(i)">
-          <mat-icon>delete</mat-icon>
+        <div *ngFor="let opt of options.controls; let i = index">
+          <mat-form-field class="option-input">
+            <input matInput [formControlName]="i" placeholder="Option {{ i + 1 }}" />
+          </mat-form-field>
+          <button mat-icon-button color="warn" (click)="removeDropdownOption(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+
+        <button mat-button color="accent" (click)="addDropdownOption()">
+          <mat-icon>add</mat-icon> Add Option
         </button>
       </div>
 
-      <button mat-button color="primary" (click)="addDropdownOption()">
-        <mat-icon>add</mat-icon> Add Option
-      </button>
-    </div>
-
-    <div class="actions">
-      <button
-    mat-flat-button
-    color="accent"
-    [disabled]="fieldForm.invalid"
-    (click)="isEditing ? updateField() : addField()"
-  >
-    {{ isEditing ? 'Update Field' : '+ Add Field' }}
-  </button>
-    </div>
-  </form>
+      <div class="actions">
+        <button mat-flat-button color="primary" [disabled]="fieldForm.invalid" (click)="isEditing ? updateField() : addField()">
+          {{ isEditing ? 'Update Field' : '+ Add Field' }}
+        </button>
+      </div>
+    </form>
+  </mat-card>
 </div>
 
 <div *ngIf="fieldsList.data.length">
-  <button mat-flat-button color="primary" (click)="generateForm()" style="margin-top: 16px;">
-    Generate Form
-  </button>
-  
-  <table mat-table [dataSource]="fieldsList" class="mat-elevation-z8" style="margin-top: 16px;">
-    <ng-container matColumnDef="label">
-      <th mat-header-cell *matHeaderCellDef> Label </th>
-      <td mat-cell *matCellDef="let field"> {{ field.label }} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef> Type </th>
-      <td mat-cell *matCellDef="let field"> {{ field.type }} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="validations">
-      <th mat-header-cell *matHeaderCellDef> Validations </th>
-      <td mat-cell *matCellDef="let field"> {{ field.required ? 'Yes' : 'No'  }} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="options">
-      <th mat-header-cell *matHeaderCellDef> Options </th>
-      <td mat-cell *matCellDef="let field">
-        {{ field.type === 'dropdown' ? (field.options?.join(', ') || '-') : '-' }}
-      </td>
-    </ng-container>    
+  <mat-card class="table-card">
+    <button mat-flat-button color="primary" (click)="generateForm()" style="margin: 16px; align-self: flex-end;">
+      <mat-icon>build</mat-icon>
+      Generate Form
+    </button>
+    <table mat-table [dataSource]="fieldsList" class="mat-elevation-z8">
+      <ng-container matColumnDef="label">
+        <th mat-header-cell *matHeaderCellDef> Label </th>
+        <td mat-cell *matCellDef="let field"> {{ field.label }} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="edit">
-      <th mat-header-cell *matHeaderCellDef> Edit </th>
-      <td mat-cell *matCellDef="let field; let i = index">
-        <button mat-icon-button color="primary" (click)="editField(i)">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="delete">
-      <th mat-header-cell *matHeaderCellDef> Delete </th>
-      <td mat-cell *matCellDef="let field; let i = index">
-        <button mat-icon-button color="warn" (click)="removeField(i)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-  
-    <tr mat-header-row *matHeaderRowDef="['label', 'type', 'validations', 'options', 'edit', 'delete']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['label', 'type', 'validations', 'options', 'edit', 'delete']"></tr>
-  </table>
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Type </th>
+        <td mat-cell *matCellDef="let field"> {{ field.type }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="validations">
+        <th mat-header-cell *matHeaderCellDef> Validations </th>
+        <td mat-cell *matCellDef="let field"> {{ field.required ? 'Yes' : 'No' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="options">
+        <th mat-header-cell *matHeaderCellDef> Options </th>
+        <td mat-cell *matCellDef="let field">
+          {{ field.type === 'dropdown' ? (field.options?.join(', ') || '-') : '-' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef> Edit </th>
+        <td mat-cell *matCellDef="let field; let i = index">
+          <button mat-icon-button color="primary" (click)="editField(i)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef> Delete </th>
+        <td mat-cell *matCellDef="let field; let i = index">
+          <button mat-icon-button color="warn" (click)="removeField(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['label', 'type', 'validations', 'options', 'edit', 'delete']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['label', 'type', 'validations', 'options', 'edit', 'delete']"></tr>
+    </table>
+  </mat-card>
 </div>

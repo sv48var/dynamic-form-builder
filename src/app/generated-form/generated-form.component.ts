@@ -3,6 +3,8 @@ import { FormStateService } from '../services/form-state.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormField } from '../form-config/field.model';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-generated-form',
@@ -17,7 +19,8 @@ export class GeneratedFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private formStateService: FormStateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ){
     this.generatedForm = this.fb.group({});
   }
@@ -38,23 +41,24 @@ export class GeneratedFormComponent implements OnInit {
 
   initializeForm(){
     this.formFields.forEach(field => {
-      const control = this.fb.control('');
-      this.generatedForm.addControl(field.label, control);
-
-      if(field.required){
-        control.setValidators([Validators.required]);
+      const validators = [];
+    
+      if (field.required) {
+        validators.push(Validators.required);
       }
-    })
+    
+      const control = this.fb.control('', validators);
+      this.generatedForm.addControl(field.id, control);
+    });    
   }
 
   onSubmit(){
     if(this.generatedForm.invalid) return;
-
     if (this.generatedForm.valid) {
       const formData = this.generatedForm.value;
       this.dialog.open(GeneratedFormModal, {
         data: formData,
-        width: '500px'
+        width: '600px'
       });
     }
   }
@@ -67,5 +71,14 @@ export class GeneratedFormComponent implements OnInit {
 })
 
 export class GeneratedFormModal{
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private router: Router,
+    private formStateService: FormStateService
+  ) {}
+
+  createNew(){
+    this.formStateService.removeFormFields();
+    this.router.navigate(['/form-config']);
+  }
 }
