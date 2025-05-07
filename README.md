@@ -1,27 +1,73 @@
-# DynamicFormBuilder
+# Angular Dynamic Form Builder
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
+This Angular application allows users to dynamically create a form with custom fields, then render and submit the form with validations. It was built as part of a frontend assignment for Amigo.
 
-## Development server
+---
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Task Objective
 
-## Code scaffolding
+The goal is to create a dynamic form builder using Angular Reactive Forms. The user should be able to:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Configure custom form fields
+- Generate the form based on this configuration
+- Validate required fields
+- Submit the form and view the submitted data in JSON format
 
-## Build
+---
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Features
 
-## Running unit tests
+### Form Configuration Page
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Add multiple form fields dynamically
+- Each field includes:
+  - A label
+  - Type selector: `Text`, `Number`, `Email`, or `Dropdown`
+  - Required toggle
+  - Custom dropdown options (if type is `Dropdown`)
+- Fields can be removed from the configuration
 
-## Running end-to-end tests
+### Generated Form Page
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- Displays form based on configuration
+- Real-time validation on required fields
+- On submission:
+  - Shows inline validation errors if any
+  - Displays submitted data in JSON format
 
-## Further help
+---
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Tech Stack
+
+- Angular 13+
+- Angular Reactive Forms (`FormBuilder`, `FormGroup`, `FormArray`)
+- Angular Material (UI components)
+- TypeScript
+- CSS/SCSS
+
+---
+
+## Getting Started
+
+# Clone the repo
+git clone https://github.com/sv48var/dynamic-form-builder.git
+cd angular-dynamic-form-builder
+
+# Install dependencies
+npm install
+
+# Run the app locally
+ng serve
+
+# Optional: Build the app
+ng build
+
+## Project Structure
+src/
+├── app/
+│   ├── form-config/         # Component to create and edit form fields
+│   ├── generated-form/      # Component to render and submit the dynamic form
+│   ├── services/
+│   │   └── form-state.service.ts  # Shared service for form configuration
+│   ├── app-routing.module.ts
+│   └── app.module.ts
