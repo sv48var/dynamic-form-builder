@@ -13,54 +13,59 @@ import { Router } from '@angular/router';
 })
 export class GeneratedFormComponent implements OnInit {
 
-  generatedForm:FormGroup = new FormGroup({});
-  formFields:FormField[] = [];
+  generatedForm: FormGroup = new FormGroup({});
+  formFields: FormField[] = [];
 
   constructor(
     private fb: FormBuilder,
     private formStateService: FormStateService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ){
+  ) {
     this.generatedForm = this.fb.group({});
   }
 
   ngOnInit(): void {
     this.formFields = this.getFormFields();
     this.initializeForm();
-    console.log(this.formFields);
   }
 
   getFormFields(): FormField[] {
     const data = this.formStateService.getFormFields();
     return data.map((field: any) => ({
       ...field,
-      required: field.required ?? false 
+      required: field.required ?? false
     }));
   }
 
-  initializeForm(){
+  initializeForm() {
     this.formFields.forEach(field => {
       const validators = [];
-    
+
       if (field.required) {
         validators.push(Validators.required);
       }
-    
+
       const control = this.fb.control('', validators);
       this.generatedForm.addControl(field.id, control);
-    });    
+    });
   }
 
-  onSubmit(){
-    if(this.generatedForm.invalid) return;
-    if (this.generatedForm.valid) {
-      const formData = this.generatedForm.value;
-      this.dialog.open(GeneratedFormModal, {
-        data: formData,
-        width: '600px'
-      });
-    }
+  onSubmit() {
+    if (this.generatedForm.invalid) return;
+
+    const rawFormData = this.generatedForm.value;
+
+    // Convert { uuid: value } into { label: value }
+    const labeledFormData: any = {};
+    this.formFields.forEach(field => {
+      labeledFormData[field.label] = rawFormData[field.id];
+    });
+
+    this.dialog.open(GeneratedFormModal, {
+      data: labeledFormData,
+      width: '600px'
+    });
   }
 }
 
@@ -69,15 +74,14 @@ export class GeneratedFormComponent implements OnInit {
   templateUrl: './generated-form-modal.html',
   styleUrl: './generated-form.component.scss'
 })
-
-export class GeneratedFormModal{
+export class GeneratedFormModal {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private router: Router,
     private formStateService: FormStateService
   ) {}
 
-  createNew(){
+  createNew() {
     this.formStateService.removeFormFields();
     this.router.navigate(['/form-config']);
   }

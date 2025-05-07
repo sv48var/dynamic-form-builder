@@ -114,7 +114,9 @@ export class FormConfigComponent implements OnInit{
   updateField() {
     if (this.editIndex === null) return;
     const label = this.fieldForm.value.label.trim();
-    const isDuplicate = this.fieldsList.data.some(field => field.label === label);
+    const isDuplicate = this.fieldsList.data.some((field, i) =>
+      i !== this.editIndex && field.label === label
+    );    
     if (isDuplicate) {
       this.snackBar.open('A field with this label already exists. Please choose a different label.', 'Close', {
         duration: 3000,  

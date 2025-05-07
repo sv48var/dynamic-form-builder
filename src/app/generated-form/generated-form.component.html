@@ -12,7 +12,7 @@
                     <input *ngSwitchCase="'email'" matInput type="email" [formControlName]="field.id" [placeholder]="field.label"/>
                     <mat-select *ngSwitchCase="'dropdown'" [formControlName]="field.id">
                         <mat-option *ngFor="let option of field.options" [value]="option">
-                            <mat-icon>check_circle</mat-icon> {{ option }}
+                            {{ option }}
                         </mat-option>
                     </mat-select>
                 </ng-container>
